@@ -5,12 +5,10 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import Message
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 
-from .catalog import PAGE_SIZE, paginate
 from .config import load_config
-from .keyboards import categories_kb, items_kb
 from .storage import CatalogStorage
 
 
@@ -25,32 +23,26 @@ async def main() -> None:
     @dp.message(CommandStart())
     async def on_start(message: Message) -> None:
         text = (
-            "Добро пожаловать! Это каталог.\n"
-            "- Введите текст для поиска\n"
-            "- Или выберите категорию"
+            "🛍️ <b>Добро пожаловать в наш магазин!</b>\n\n"
+            "Здесь вы можете посмотреть каталог товаров и оформить заказ.\n\n"
+            "Нажмите кнопку ниже, чтобы открыть каталог:"
         )
-        kb = categories_kb(storage.categories())
-        if config.webapp_url:
-            open_app = InlineKeyboardButton(text="Открыть Mini App", web_app=WebAppInfo(url=config.webapp_url))
-            rows = list(kb.inline_keyboard)
-            rows.insert(0, [open_app])
-            kb = InlineKeyboardMarkup(inline_keyboard=rows)
+        
+        # Используем тот же URL, что настроен в BotFather
+        # Замените на ваш реальный Netlify URL
+        webapp_url = config.webapp_url or "https://pomoika-miniapp-frontend.netlify.app/"
+        
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🛒 Открыть каталог", web_app=WebAppInfo(url=webapp_url))]
+        ])
+            
         await message.answer(text, reply_markup=kb)
 
     @dp.message(F.text)
-    async def on_search(message: Message) -> None:
-        query = (message.text or "").strip()
-        results = storage.search(query)
-        if not results:
-            await message.answer("Ничего не найдено. Попробуйте другой запрос.")
-            return
-        page = paginate(results, 1, PAGE_SIZE)
-        for item in page.items:
-            caption = f"<b>{item.title}</b>\nЦена: {item.price:.2f}\n{item.description}"
-            if item.photo_url:
-                await message.answer_photo(item.photo_url, caption=caption)
-            else:
-                await message.answer(caption)
+    async def on_text(message: Message) -> None:
+        await message.answer(
+            "Для просмотра каталога используйте кнопку \"🛒 Открыть каталог\" или команду /start"
+        )
 
     def is_admin(user_id: int) -> bool:
         return user_id in config.admin_ids
@@ -164,47 +156,6 @@ async def main() -> None:
             except Exception:
                 pass
 
-    @dp.callback_query(F.data.startswith("cat:"))
-    async def on_category(call: CallbackQuery) -> None:
-        await call.answer()
-        category = call.data.split(":", 1)[1]
-        items = storage.items_by_category(category)
-        page = paginate(items, 1)
-        if not items:
-            await call.message.edit_text("В категории пока пусто.")
-            return
-        await render_category(call, category, page.page, page.total_pages, page.items)
-
-    @dp.callback_query(F.data.startswith("page:"))
-    async def on_page(call: CallbackQuery) -> None:
-        await call.answer()
-        _, category, page_str = call.data.split(":", 2)
-        page_num = int(page_str)
-        items = storage.items_by_category(category)
-        page = paginate(items, page_num)
-        await render_category(call, category, page.page, page.total_pages, page.items)
-
-    @dp.callback_query(F.data == "back:cats")
-    async def on_back(call: CallbackQuery) -> None:
-        await call.answer()
-        await call.message.edit_text(
-            "Выберите категорию:", reply_markup=categories_kb(storage.categories())
-        )
-
-    async def render_category(
-        call: CallbackQuery,
-        category: str,
-        page_num: int,
-        total_pages: int,
-        items,
-    ) -> None:
-        text_lines = [f"Категория: <b>{category}</b>"]
-        for item in items:
-            text_lines.append(f"\n<b>{item.title}</b> — {item.price:.2f}\n{item.description}")
-        await call.message.edit_text(
-            "\n".join(text_lines),
-            reply_markup=items_kb(category, page_num, total_pages),
-        )
 
     await dp.start_polling(bot)
 
