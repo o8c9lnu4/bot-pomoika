@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "title": "Pod System Alpha",
+    "description": "Компактная pod-система, батарея 900mAh",
+    "price": 1890.0,
+    "category": "Pod системы",
+    "photo_url": null
+  },
+  {
+    "id": "2",
+    "title": "Одноразка Berry Ice",
+    "description": "Вкус: ягоды и лёд, 600 затяжек",
+    "price": 490.0,
+    "category": "Одноразки",
+    "photo_url": null
+  },
+  {
+    "id": "3",
+    "title": "Жидкость Mango 30ml",
+    "description": "Сочный манго, крепость 20mg",
+    "price": 650.0,
+    "category": "Жидкости",
+    "photo_url": null
+  },
+  {
+    "id": "4",
+    "title": "Картридж Alpha",
+    "description": "Сменный картридж для Pod System Alpha",
+    "price": 350.0,
+    "category": "Расходники",
+    "photo_url": null
+  }
+]
+
