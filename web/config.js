@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  API_BASE: 'https://www.netlify.com/' // например, Railway/Render
+  API_BASE: 'https://pomoika-miniapp.netlify.app/' // Укажите HTTPS URL вашего backend (Railway/Render/VPS)
 };

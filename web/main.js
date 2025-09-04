@@ -88,11 +88,15 @@ async function init(){
 }
 
 searchEl.addEventListener('input', render);
-document.getElementById('close').addEventListener('click', ()=> tg?.close());
 
 init().catch(e=>{
-  console.error(e);
-  itemsEl.textContent = 'Ошибка загрузки каталога';
+  console.error('Init error:', e);
+  itemsEl.innerHTML = `
+    <div style="text-align:center;padding:20px;color:var(--muted)">
+      <div>Ошибка загрузки каталога</div>
+      <div style="font-size:12px;margin-top:8px">Проверьте API_BASE в config.js</div>
+    </div>
+  `;
 });
 
 
