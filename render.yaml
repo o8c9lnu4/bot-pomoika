@@ -5,7 +5,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: python -m uvicorn app.server:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: 8331513788:AAEqlTi3fAq7dGXjIOpD3tHyxKoo5ZFdW5M
-        sync: false
-      - key: 1416114363
-        sync: false
+      - key: BOT_TOKEN
+        value: 8331513788:AAEqlTi3fAq7dGXjIOpD3tHyxKoo5ZFdW5M
+      - key: ADMIN_IDS
+        value: 1416114363

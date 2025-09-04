@@ -25,8 +25,10 @@
 3) Настройки:
    - **Base directory**: пустой
    - **Publish directory**: `web`
-   - **Build command**: пустой
+   - **Build command**: `echo 'Static site - no build needed'`
 4) После деплоя получите URL (например: `https://pomoika-miniapp.netlify.app`)
+
+**Альтернативно**: Netlify автоматически определит настройки из `netlify.toml`
 
 ## 3. Обновите конфиги
 
