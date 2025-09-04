@@ -1,17 +1,22 @@
 # Деплой Telegram Bot + Mini App
 
-## 1. Backend API (Railway)
+## 1. Backend API (Render)
 
-1) Зайдите на [railway.app](https://railway.app) и войдите через GitHub
-2) Создайте новый проект "Deploy from GitHub repo"
-3) Выберите ваш репозиторий
-4) Railway автоматически определит Python и установит зависимости
-5) В настройках проекта добавьте переменные окружения:
+1) Зайдите на [render.com](https://render.com) и войдите через GitHub
+2) Нажмите "New +" → "Web Service"
+3) Подключите ваш GitHub репозиторий
+4) Настройки:
+   - **Name**: `pomoika-api`
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python -m uvicorn app.server:app --host 0.0.0.0 --port $PORT`
+5) В разделе "Environment Variables" добавьте:
    ```
    BOT_TOKEN=ваш_токен_от_BotFather
    ADMIN_IDS=ваш_telegram_id
    ```
-6) Получите URL вашего приложения (например: `https://pomoika-api-production.up.railway.app`)
+6) Нажмите "Create Web Service"
+7) Получите URL вашего приложения (например: `https://pomoika-api.onrender.com`)
 
 ## 2. Frontend Mini App (Netlify)
 
@@ -27,7 +32,7 @@
 
 1) В `web/config.js` замените:
    ```js
-   API_BASE: 'https://ВАШ-RAILWAY-ДОМЕН.up.railway.app'
+   API_BASE: 'https://ВАШ-RENDER-ДОМЕН.onrender.com'
    ```
 
 2) В `.env` (для локального бота):

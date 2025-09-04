@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  API_BASE: 'https://ВАШ-RAILWAY-ДОМЕН.up.railway.app' // Замените на ваш Railway URL
+  API_BASE: 'https://pomoika-api.onrender.com' // Замените на ваш Render URL
 };
