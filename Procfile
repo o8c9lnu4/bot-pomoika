@@ -1,1 +1,1 @@
-web: python -m uvicorn app.server:app --host 0.0.0.0 --port $PORT
+web: cd admin && python manage.py runserver 0.0.0.0:$PORT

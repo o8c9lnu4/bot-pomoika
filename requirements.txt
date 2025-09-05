@@ -2,4 +2,7 @@ aiogram
 python-dotenv
 fastapi
 uvicorn[standard]
+Django
+djangorestframework
+Pillow
 
