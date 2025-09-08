@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>Мой блог</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      html, body { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif; }
+      body { background: #0d0b14; color: #EDE7F6; }
+      a { color: #BB86FC; }
+    </style>
+    <script>
+      // Если это страница админки, перенаправляем и останавливаем загрузку Vue.js
+      if (window.location.pathname.startsWith('/admin/')) {
+        // Удаляем все стили Vue.js и Vuetify
+        document.querySelectorAll('link[href*="vuetify"]').forEach(link => link.remove());
+        document.querySelectorAll('link[href*="materialdesignicons"]').forEach(link => link.remove());
+        // Перенаправляем на оригинальный URL Django admin
+        window.location.replace(window.location.pathname);
+      } else {
+        // Загружаем стили только для не-админ страниц
+        const loadStyles = () => {
+          const links = [
+            'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900',
+            'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css',
+            'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'
+          ];
+          links.forEach(href => {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+          });
+        };
+        loadStyles();
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <strong>К сожалению, этот сайт не работает без включенного JavaScript. Пожалуйста, включите его для продолжения.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html> 

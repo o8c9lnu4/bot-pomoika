@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блог</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fafafa;
+            color: #000;
+        }
+        .header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #000;
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: #000;
+            text-decoration: none;
+            margin-left: 2rem;
+            cursor: pointer;
+        }
+        .user-info {
+            display: none;
+            align-items: center;
+        }
+        .user-info span {
+            margin-right: 1rem;
+        }
+        .main {
+            padding: 4rem 0;
+        }
+        .title {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+        .posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .post {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 2rem;
+        }
+        .post h2 {
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+        .post p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .post-meta {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        .post-meta small {
+            color: #999;
+            margin-right: 1rem;
+        }
+        .post-link {
+            color: #000;
+            text-decoration: none;
+        }
+        .post-link:hover {
+            text-decoration: underline;
+        }
+        .post-image {
+            margin-bottom: 1rem;
+        }
+        .post-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .footer {
+            background: #000;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border: 1px solid #e0e0e0;
+            width: 90%;
+            max-width: 400px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #333;
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .form-footer a {
+            color: #000;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .error {
+            color: #d32f2f;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .success {
+            color: #388e3c;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">БЛОГ</a>
+                <div class="nav-links" id="authLinks">
+                    <a href="/">Главная</a>
+                    <a onclick="openLoginModal()">Вход</a>
+                    <a onclick="openRegisterModal()">Регистрация</a>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <span id="username"></span>
+                    <a onclick="logout()">Выход</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 class="title">Посты</h1>
+            <p class="subtitle">Последние публикации</p>
+            
+            <div class="posts">
+                {% if posts %}
+                                    {% for post in posts %}
+                <div class="post">
+                    {% if post.image_url %}
+                        <div class="post-image">
+                            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="post-img">
+                        </div>
+                    {% endif %}
+                    <h2><a href="/post/{{ post.id }}/" class="post-link">{{ post.title }}</a></h2>
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                    <div class="post-meta">
+                        <small>{{ post.published_date|date:"d.m.Y" }}</small>
+                        {% if post.author %}
+                            <small>Автор: {{ post.author.username }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                    <div class="post">
+                        <h2>Пока нет постов</h2>
+                        <p>Посты еще не добавлены. Загляните позже!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>2025 — Блог</p>
+        </div>
+    </footer>
+
+    <!-- CSRF токен -->
+    {% csrf_token %}
+
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2>Вход</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Имя пользователя</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <div id="loginError" class="error"></div>
+                <button type="submit" class="btn">Войти</button>
+            </form>
+            <div class="form-footer">
+                <a onclick="closeLoginModal(); openRegisterModal()">Нет аккаунта? Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRegisterModal()">&times;</span>
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Имя пользователя</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Подтвердите пароль</label>
+                    <input type="password" id="registerPasswordConfirm" name="password_confirm" required>
+                </div>
+                <div id="registerError" class="error"></div>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+            </form>
+            <div class="form-footer">
+                <a onclick="closeRegisterModal(); openLoginModal()">Уже есть аккаунт? Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CSRF токен для всех запросов
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+        // Функции для модальных окон
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('loginError').textContent = '';
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        function openRegisterModal() {
+            document.getElementById('registerModal').style.display = 'block';
+            document.getElementById('registerError').textContent = '';
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        
+        // Закрытие модальных окон при клике вне их
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+        
+        // Проверка авторизации при загрузке
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/profile/', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const user = await response.json();
+                    showUserInfo(user);
+                }
+            } catch (error) {
+                console.error('Ошибка проверки авторизации:', error);
+            }
+        }
+        
+        // Показать информацию о пользователе
+        function showUserInfo(user) {
+            document.getElementById('authLinks').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('username').textContent = `Привет, ${user.username}!`;
+        }
+        
+        // Скрыть информацию о пользователе
+        function hideUserInfo() {
+            document.getElementById('authLinks').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+        
+        // Выход
+        async function logout() {
+            try {
+                const response = await fetch('/api/auth/logout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    hideUserInfo();
+                    alert('Выход выполнен успешно');
+                } else {
+                    console.error('Ошибка выхода:', response.status);
+                }
+            } catch (error) {
+                console.error('Ошибка выхода:', error);
+            }
+        }
+        
+        // Обработка форм
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            try {
+                const response = await fetch('/api/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeLoginModal();
+                    showUserInfo(data.user);
+                    alert('Вход выполнен успешно!');
+                } else {
+                    errorDiv.textContent = data.username || data.password || data.non_field_errors || 'Ошибка входа';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Ошибка соединения';
+            }
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            const errorDiv = document.getElementById('registerError');
+            
+            if (password !== passwordConfirm) {
+                errorDiv.textContent = 'Пароли не совпадают';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ username, email, password, password_confirm: passwordConfirm }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeRegisterModal();
+                    showUserInfo(data.user);
+                    alert('Регистрация успешна!');
+                } else {
+                    let errorMessage = '';
+                    for (const field in data) {
+                        if (Array.isArray(data[field])) {
+                            errorMessage += data[field].join(', ') + ' ';
+                        } else {
+                            errorMessage += data[field] + ' ';
+                        }
+                    }
+                    errorDiv.textContent = errorMessage || 'Ошибка регистрации';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Ошибка соединения';
+            }
+        });
+        
+        // Получить CSRF токен
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue || csrfToken;
+        }
+        
+        // Проверить авторизацию при загрузке страницы
+        checkAuth();
+    </script>
+</body>
+</html> 

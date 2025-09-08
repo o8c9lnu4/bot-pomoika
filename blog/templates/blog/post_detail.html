@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+{% load blog_extras %}
+
+{% block title %}{{ post.title }} - Блог{% endblock %}
+
+{% block content %}
+    <v-row>
+        <v-col cols="12">
+            <v-btn text color="primary" href="{% url 'blog:post_list' %}" class="mb-4">
+                <v-icon left>mdi-arrow-left</v-icon>
+                Назад к списку
+            </v-btn>
+        </v-col>
+    </v-row>
+
+    <v-row>
+        <v-col cols="12">
+            <v-card>
+                <v-card-title class="text-h4">{{ post.title }}</v-card-title>
+                <v-card-subtitle>
+                    Опубликовано: {{ post.published_date|date:"d.m.Y H:i" }}
+                </v-card-subtitle>
+                <v-card-text class="text-body-1">
+                    {{ post.content|linebreaks_filter }}
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-row>
+{% endblock %} 

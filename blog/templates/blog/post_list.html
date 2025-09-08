@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Главная - Блог{% endblock %}
+
+{% block content %}
+    <v-row>
+        <v-col cols="12">
+            <h1 class="text-h4 mb-4">Последние посты</h1>
+        </v-col>
+    </v-row>
+
+    <v-row>
+        {% for post in posts %}
+            <v-col cols="12" md="6" lg="4">
+                <v-card>
+                    <v-card-title>{{ post.title }}</v-card-title>
+                    <v-card-text>
+                        <p class="text-truncate">{{ post.content }}</p>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="primary" href="{% url 'blog:post_detail' post.pk %}">
+                            Читать далее
+                        </v-btn>
+                    </v-card-actions>
+                    <v-card-subtitle>
+                        Опубликовано: {{ post.published_date|date:"d.m.Y H:i" }}
+                    </v-card-subtitle>
+                </v-card>
+            </v-col>
+        {% empty %}
+            <v-col cols="12">
+                <v-alert type="info">
+                    Пока нет опубликованных постов.
+                </v-alert>
+            </v-col>
+        {% endfor %}
+    </v-row>
+
+    {% if is_paginated %}
+        <v-row class="mt-4">
+            <v-col cols="12" class="text-center">
+                <v-pagination
+                    v-model="page"
+                    :length="num_pages"
+                    @input="onPageChange"
+                ></v-pagination>
+            </v-col>
+        </v-row>
+    {% endif %}
+{% endblock %} 

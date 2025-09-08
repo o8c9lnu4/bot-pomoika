@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Блог{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        html, body { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif; }
+        body { background: #0d0b14; color: #EDE7F6; }
+        a { color: #BB86FC; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <v-app dark>
+            <v-app-bar app color="#151226" dark flat>
+                <v-toolbar-title>Мой блог</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn text color="#BB86FC" href="{% url 'blog:post_list' %}">Главная</v-btn>
+            </v-app-bar>
+
+            <v-main style="background:#0d0b14;">
+                <v-container>
+                    {% block content %}
+                    {% endblock %}
+                </v-container>
+            </v-main>
+
+            <v-footer app color="#151226" dark>
+                <v-col class="text-center" cols="12">
+                    {{ year }} — <strong style="color:#9E8CFF">Мой блог</strong>
+                </v-col>
+            </v-footer>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data: {
+                year: new Date().getFullYear()
+            }
+        })
+    </script>
+</body>
+</html> 
