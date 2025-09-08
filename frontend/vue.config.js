@@ -6,7 +6,7 @@ module.exports = defineConfig({
   ],
   outputDir: 'dist',
   assetsDir: '',
-  publicPath: '/static/',
+  publicPath: '/',
   filenameHashing: false,
   productionSourceMap: false,
   devServer: {

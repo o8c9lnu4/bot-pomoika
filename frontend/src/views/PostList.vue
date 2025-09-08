@@ -5,8 +5,8 @@
       <v-row>
         <v-col cols="12">
           <div class="mb-8">
-            <h1 class="text-h2 font-weight-light black--text mb-2">Посты</h1>
-            <div class="text-body-1 grey--text">Последние публикации</div>
+            <h1 class="text-h2 font-weight-light white--text mb-2">Посты</h1>
+            <div class="text-body-1" style="color:#BDB4FF">Последние публикации</div>
           </div>
         </v-col>
       </v-row>
@@ -22,15 +22,15 @@
               flat
             >
               <v-card-text class="pa-6">
-                <h2 class="text-h5 font-weight-light mb-3 black--text">{{ post.title }}</h2>
-                <div class="text-body-2 grey--text text--darken-1 mb-4 post-excerpt">
+                <h2 class="text-h5 font-weight-light mb-3 white--text">{{ post.title }}</h2>
+                <div class="text-body-2 mb-4 post-excerpt" style="color:#D7D2FF">
                   {{ post.content }}
                 </div>
                 <div class="d-flex align-center justify-space-between">
-                  <span class="text-caption grey--text">{{ formatDate(post.published_date) }}</span>
+                  <span class="text-caption" style="color:#A39AE6">{{ formatDate(post.published_date) }}</span>
                   <v-btn
                     text
-                    color="black"
+                    color="#BB86FC"
                     :to="{ name: 'PostDetail', params: { id: post.id }}"
                     class="text-capitalize px-0"
                   >
@@ -46,11 +46,11 @@
       <!-- Сообщение об отсутствии постов -->
       <v-row v-if="posts.length === 0 && !loading" class="mt-6">
         <v-col cols="12" sm="8" md="6" class="mx-auto">
-          <v-card class="text-center pa-6" flat>
-            <h2 class="text-h5 font-weight-light mb-2 black--text">
+          <v-card class="text-center pa-6" flat color="#151226">
+            <h2 class="text-h5 font-weight-light mb-2 white--text">
               Пока нет опубликованных постов
             </h2>
-            <p class="text-body-1 grey--text mb-0">
+            <p class="text-body-1" style="color:#A39AE6" mb-0>
               Загляните позже
             </p>
           </v-card>
@@ -64,7 +64,7 @@
             v-model="currentPage"
             :length="totalPages"
             :total-visible="7"
-            color="black"
+            color="#BB86FC"
             class="custom-pagination"
           ></v-pagination>
         </v-col>
