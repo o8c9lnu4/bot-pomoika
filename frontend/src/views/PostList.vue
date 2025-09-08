@@ -13,13 +13,13 @@
 
       <!-- Сетка постов -->
       <v-row>
-        <v-col v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4">
+        <v-col v-for="post in posts" :key="post.id" cols="12" sm="6" md="4" lg="3">
           <v-hover v-slot="{ hover }">
             <v-card
-              :elevation="hover ? 2 : 0"
+              :elevation="hover ? 8 : 2"
               :class="{ 'on-hover': hover }"
               class="mx-auto transition-swing fill-height post-card"
-              flat
+              color="#151226"
             >
               <v-card-text class="pa-6">
                 <h2 class="text-h5 font-weight-light mb-3 white--text">{{ post.title }}</h2>
@@ -146,24 +146,28 @@ export default {
 
 .post-card {
   transition: all 0.3s ease;
-  border: 1px solid #e0e0e0;
-  border-radius: 0;
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 12px;
+  background: #151226 !important;
 }
 
 .on-hover {
-  transform: translateY(-2px);
-  border-color: #000;
+  transform: translateY(-4px);
+  border-color: #BB86FC;
+  box-shadow: 0 8px 32px rgba(124, 77, 255, 0.2) !important;
 }
 
 .custom-pagination >>> .v-pagination__item {
   box-shadow: none;
-  border: 1px solid #e0e0e0;
-  border-radius: 0;
+  border: 1px solid rgba(187, 134, 252, 0.3);
+  border-radius: 8px;
+  background: #151226 !important;
+  color: #BB86FC !important;
 }
 
 .custom-pagination >>> .v-pagination__item--active {
-  background-color: #000 !important;
-  color: white !important;
+  background-color: #BB86FC !important;
+  color: #0d0b14 !important;
 }
 
 .v-card {
