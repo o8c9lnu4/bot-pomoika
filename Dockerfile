@@ -25,10 +25,5 @@ COPY . .
 # Копируем собранный фронт в Django staticfiles
 COPY --from=frontend /app/frontend/dist /app/frontend/dist
 
-# Собираем статику
-RUN python manage.py collectstatic --noinput
-RUN python manage.py migrate
-
-# RUN python create_superuser.py
-# Запуск gunicorn
-CMD gunicorn blog_project.wsgi:application --bind 0.0.0.0:8000 
+# Запуск: сначала собираем статику и выполняем миграции, затем поднимаем gunicorn
+CMD sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn blog_project.wsgi:application --bind 0.0.0.0:8000"
