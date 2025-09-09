@@ -1,41 +1,39 @@
 <template>
   <div>
     <v-container class="py-4">
-      <!-- Заголовок -->
+      <!-- Компактный заголовок для мини-приложения -->
       <v-row>
         <v-col cols="12">
-          <div class="mb-8">
-            <h1 class="text-h2 font-weight-light white--text mb-2">Посты</h1>
-            <div class="text-body-1" style="color:#BDB4FF">Последние публикации</div>
+          <div class="mb-4">
+            <h1 class="text-h5 font-weight-medium white--text mb-1">Новости</h1>
+            <div class="text-caption" style="color:#BDB4FF">Последние публикации</div>
           </div>
         </v-col>
       </v-row>
 
-      <!-- Сетка постов -->
+      <!-- Компактная сетка постов для мини-приложения -->
       <v-row>
-        <v-col v-for="post in posts" :key="post.id" cols="12" sm="6" md="4" lg="3">
+        <v-col v-for="post in posts" :key="post.id" cols="12">
           <v-hover v-slot="{ hover }">
             <v-card
-              :elevation="hover ? 8 : 2"
+              :elevation="hover ? 4 : 1"
               :class="{ 'on-hover': hover }"
-              class="mx-auto transition-swing fill-height post-card"
+              class="mx-auto transition-swing post-card-mini"
               color="#151226"
+              @click="goToPost(post.id)"
             >
-              <v-card-text class="pa-6">
-                <h2 class="text-h5 font-weight-light mb-3 white--text">{{ post.title }}</h2>
-                <div class="text-body-2 mb-4 post-excerpt" style="color:#D7D2FF">
+              <v-card-text class="pa-3">
+                <div class="d-flex align-start justify-space-between mb-2">
+                  <h3 class="text-subtitle-1 font-weight-medium white--text mb-1" style="line-height: 1.3;">
+                    {{ post.title }}
+                  </h3>
+                  <v-icon small style="color:#BB86FC">mdi-chevron-right</v-icon>
+                </div>
+                <div class="text-body-2 mb-2 post-excerpt-mini" style="color:#D7D2FF">
                   {{ post.content }}
                 </div>
-                <div class="d-flex align-center justify-space-between">
-                  <span class="text-caption" style="color:#A39AE6">{{ formatDate(post.published_date) }}</span>
-                  <v-btn
-                    text
-                    color="#BB86FC"
-                    :to="{ name: 'PostDetail', params: { id: post.id }}"
-                    class="text-capitalize px-0"
-                  >
-                    Читать
-                  </v-btn>
+                <div class="text-caption" style="color:#A39AE6">
+                  {{ formatDate(post.published_date) }}
                 </div>
               </v-card-text>
             </v-card>
@@ -109,6 +107,10 @@ export default {
             baseURL: error.config.baseURL
           }
         })
+        // Показываем ошибку в Telegram
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Ошибка загрузки данных');
+        }
       } finally {
         setTimeout(() => {
           this.loading = false
@@ -121,6 +123,9 @@ export default {
         month: '2-digit',
         year: 'numeric'
       })
+    },
+    goToPost(postId) {
+      this.$router.push({ name: 'PostDetail', params: { id: postId } });
     }
   },
   watch: {
@@ -130,6 +135,12 @@ export default {
   },
   created() {
     this.fetchPosts()
+  },
+  mounted() {
+    // Слушаем событие обновления данных
+    this.$root.$on('refresh-data', () => {
+      this.fetchPosts()
+    })
   }
 }
 </script>
@@ -144,6 +155,15 @@ export default {
   line-height: 1.6;
 }
 
+.post-excerpt-mini {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
 .post-card {
   transition: all 0.3s ease;
   border: 1px solid rgba(187, 134, 252, 0.2);
@@ -151,10 +171,18 @@ export default {
   background: #151226 !important;
 }
 
+.post-card-mini {
+  transition: all 0.2s ease;
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 8px;
+  background: #151226 !important;
+  cursor: pointer;
+}
+
 .on-hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   border-color: #BB86FC;
-  box-shadow: 0 8px 32px rgba(124, 77, 255, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(124, 77, 255, 0.15) !important;
 }
 
 .custom-pagination >>> .v-pagination__item {

@@ -3,18 +3,51 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>Мой блог</title>
+    <title>Pomoika Vape Lab</title>
+    <meta name="telegram-mini-app" content="true">
+    <meta name="theme-color" content="#0d0b14">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-      html, body { font-family: 'Space Grotesk', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif; }
-      body { background: #0d0b14; color: #EDE7F6; }
+      html, body { 
+        font-family: 'Space Grotesk', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif; 
+        height: 100vh;
+        overflow-x: hidden;
+      }
+      body { 
+        background: #0d0b14; 
+        color: #EDE7F6; 
+        margin: 0;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+      }
       a { color: #BB86FC; }
+      
+      /* Telegram Mini App specific styles */
+      #app {
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Hide scrollbars in mini app */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
     </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+      // Инициализация Telegram WebApp
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+        window.Telegram.WebApp.enableClosingConfirmation();
+      }
+      
       // Если это страница админки, перенаправляем и останавливаем загрузку Vue.js
       if (window.location.pathname.startsWith('/admin/')) {
         // Удаляем все стили Vue.js и Vuetify
