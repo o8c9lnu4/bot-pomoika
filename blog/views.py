@@ -3,9 +3,10 @@ from django.views.generic import ListView, DetailView
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from .models import Post
 from .serializers import PostSerializer, RegisterSerializer, LoginSerializer, UserSerializer
 
@@ -33,6 +34,10 @@ class PostDetailView(DetailView):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_date')
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -71,3 +76,13 @@ def user_profile(request):
     if request.user.is_authenticated:
         return Response(UserSerializer(request.user).data)
     return Response({'error': 'Не авторизован'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return UserSerializer
+        return UserSerializer

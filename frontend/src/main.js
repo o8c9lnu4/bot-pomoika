@@ -3,7 +3,9 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
+import Toast from 'vue-toastification'
 import 'vuetify/dist/vuetify.min.css'
+import 'vue-toastification/dist/index.css'
 
 Vue.config.productionTip = false
 
@@ -17,12 +19,27 @@ axios.defaults.baseURL = envApiBase || (isProduction ? defaultProdBase : default
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-// Проверяем, что мы не на странице админки
-const isAdminPage = window.location.pathname.startsWith('/admin/')
-if (!isAdminPage && document.getElementById('app')) {
-  new Vue({
-    router,
-    vuetify,
-    render: h => h(App)
-  }).$mount('#app')
-} 
+// Настройка toast уведомлений
+Vue.use(Toast, {
+  position: 'top-right',
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnFocusLoss: true,
+  pauseOnHover: true,
+  draggable: true,
+  draggablePercent: 0.6,
+  showCloseButtonOnHover: false,
+  hideProgressBar: false,
+  closeButton: 'button',
+  icon: true,
+  rtl: false
+})
+
+// Добавляем глобальный метод для toast
+Vue.prototype.$toast = Vue.$toast
+
+new Vue({
+  router,
+  vuetify,
+  render: h => h(App)
+}).$mount('#app') 
