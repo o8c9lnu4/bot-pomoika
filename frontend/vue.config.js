@@ -6,17 +6,17 @@ module.exports = defineConfig({
   ],
   outputDir: 'dist',
   assetsDir: '',
-  publicPath: '/',
+  publicPath: '/static/',
   filenameHashing: false,
   productionSourceMap: false,
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: process.env.NODE_ENV === 'production' ? 'https://bot-pomoika.onrender.com' : 'http://localhost:8000',
         changeOrigin: true
       },
       '/admin': {
-        target: 'http://localhost:8000',
+        target: process.env.NODE_ENV === 'production' ? 'https://bot-pomoika.onrender.com' : 'http://localhost:8000',
         changeOrigin: true,
         bypass: function(req) {
           if (req.url.startsWith('/admin')) {
@@ -25,7 +25,7 @@ module.exports = defineConfig({
         }
       },
       '/static': {
-        target: 'http://localhost:8000',
+        target: process.env.NODE_ENV === 'production' ? 'https://bot-pomoika.onrender.com' : 'http://localhost:8000',
         changeOrigin: true
       }
     },
