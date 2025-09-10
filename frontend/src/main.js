@@ -10,9 +10,8 @@ Vue.config.productionTip = false
 // Настройка axios
 const isProduction = process.env.NODE_ENV === 'production'
 const envApiBase = process.env.VUE_APP_API_BASE_URL
-// В продакшене по умолчанию НЕ используем origin страницы (например, Telegram WebApp),
-// поэтому требуем явный VUE_APP_API_BASE_URL; в деве — localhost:8000
-const defaultProdBase = '' // оставляем относительный путь только если фронт и бэк на одном домене
+// В продакшене используем URL хостинга, в деве — localhost:8000
+const defaultProdBase = 'https://bot-pomoika.onrender.com/' // ЗАМЕНИТЕ НА ВАШ ДОМЕН
 const defaultDevBase = 'http://localhost:8000'
 axios.defaults.baseURL = envApiBase || (isProduction ? defaultProdBase : defaultDevBase)
 axios.defaults.xsrfCookieName = 'csrftoken'
