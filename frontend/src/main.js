@@ -8,7 +8,13 @@ import 'vuetify/dist/vuetify.min.css'
 Vue.config.productionTip = false
 
 // Настройка axios
-axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000'
+const isProduction = process.env.NODE_ENV === 'production'
+const envApiBase = process.env.VUE_APP_API_BASE_URL
+// В продакшене по умолчанию НЕ используем origin страницы (например, Telegram WebApp),
+// поэтому требуем явный VUE_APP_API_BASE_URL; в деве — localhost:8000
+const defaultProdBase = '' // оставляем относительный путь только если фронт и бэк на одном домене
+const defaultDevBase = 'http://localhost:8000'
+axios.defaults.baseURL = envApiBase || (isProduction ? defaultProdBase : defaultDevBase)
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
