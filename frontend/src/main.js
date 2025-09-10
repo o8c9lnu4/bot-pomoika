@@ -38,6 +38,24 @@ Vue.use(Toast, {
 // Добавляем глобальный метод для toast
 Vue.prototype.$toast = Vue.$toast
 
+// Interceptor для проверки авторизации
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // Если получили 401, очищаем данные авторизации и перенаправляем на логин
+      localStorage.removeItem('admin_user')
+      localStorage.removeItem('is_admin')
+      localStorage.removeItem('admin_token')
+      
+      if (window.location.hash.includes('/admin')) {
+        window.location.href = '/#/admin/login'
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
 new Vue({
   router,
   vuetify,
