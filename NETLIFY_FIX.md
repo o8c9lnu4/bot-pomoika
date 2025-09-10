@@ -8,12 +8,15 @@ sh: 1: vue-cli-service: not found
 ## Решение
 
 ### 1. Обновлен package.json
-Переместил необходимые пакеты из `devDependencies` в `dependencies`:
+Переместил все необходимые пакеты из `devDependencies` в `dependencies`:
 - `@vue/cli-service`
+- `@vue/cli-plugin-babel`
+- `@vue/cli-plugin-eslint`
 - `vue-template-compiler`
 - `sass`
 - `sass-loader`
 - `vuetify-loader`
+- `vue-cli-plugin-vuetify`
 
 ### 2. Обновлен netlify.toml
 Изменил команду сборки с `npm ci` на `npm install`:
