@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key-for-dev')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'bot-pomoika.onrender.com']
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -166,6 +166,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://localhost:8000',
+    'https://bot-pomoika.onrender.com',
 ]
 if RENDER_EXTERNAL_HOSTNAME:
     CORS_ALLOWED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
@@ -186,7 +187,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Session settings
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
-SESSION_COOKIE_SECURE = False  # Set to True in production
+SESSION_COOKIE_SECURE = not DEBUG  # True in production
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
@@ -201,9 +202,9 @@ LOGOUT_REDIRECT_URL = '/admin/login/'
 
 # CSRF settings
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = not DEBUG  # True in production
 CSRF_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://localhost:8080']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://localhost:8080', 'https://bot-pomoika.onrender.com']
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 
