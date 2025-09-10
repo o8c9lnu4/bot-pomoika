@@ -10,7 +10,7 @@
 
 ### 2. Настройки сборки (автоматически из netlify.toml)
 - **Base directory**: `frontend`
-- **Build command**: `npm install && npm run build`
+- **Build command**: `npm install && npm run build:prod`
 - **Publish directory**: `frontend/dist`
 
 ### 3. Переменные окружения
@@ -22,7 +22,7 @@
 ### Build settings:
 ```
 Base directory: frontend
-Build command: npm install && npm run build
+Build command: npm install && npm run build:prod
 Publish directory: frontend/dist
 ```
 
