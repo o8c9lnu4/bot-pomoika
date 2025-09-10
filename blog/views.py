@@ -31,7 +31,7 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-published_date')
+    queryset = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
     serializer_class = PostSerializer
 
 @api_view(['POST'])
